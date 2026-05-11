@@ -51,6 +51,16 @@ The `tokenId` you pass to `mint()` must equal `uint256(bs58.decode(yourCID).slic
 
 `CIDLib` trades a small amount of read-time compute (`toCID` costs ~851,051 gas) for eliminating all per-token write storage. For collections of any size, this is a strict win.
 
+## Why CIDv0, Not CIDv1?
+
+IPFS has two CID versions. CIDv1 is the current default, but CIDv0 is the only version that fits in a `uint256`.
+
+CIDv0 has a fixed structure: `base58btc(0x12 || 0x20 || sha256_hash)` - exactly 34 bytes after decoding, where the last 32 bytes are the SHA-256 hash.
+
+CIDv1 prepends a variable-length multibase prefix, version byte, and multicodec - making the total length unpredictable and incompatible with a fixed-width integer.
+
+CIDv0 is deprecated for new IPFS content but remains fully supported. Existing content pinned under a CIDv0 hash is permanently addressable.
+
 ## Gas Analysis
 
 ```
